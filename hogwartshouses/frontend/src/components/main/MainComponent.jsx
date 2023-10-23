@@ -5,11 +5,11 @@ import FooterComponent from "./FooterComponent";
 
 function MainComponent() {
     return (
-        <div>
+        <>
             <HeaderComponent />
             <ContentComponent />
             <FooterComponent />
-        </div>
+        </>
     );
 }
 

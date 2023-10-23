@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import React from "react";
-import MainComponent from "./components/MainComponent";
+import RouterComponent from "./components/main/RouterComponent";
 
 function App() {
   return (
     <div className="App">
-      <MainComponent />
+      <RouterComponent />
 
       {/*<header className="App-header">*/}
       {/*  <img src={logo} className="App-logo" alt="logo" />*/}
