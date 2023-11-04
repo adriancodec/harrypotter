@@ -5,7 +5,7 @@ function PotionDetailsComponent() {
         <>
             <h1>NameOfMyPotion</h1>
             <h2>Student ID</h2>
-            <text>Description ? </text>
+            <label>Description ? </label>
         </>
     );
 }

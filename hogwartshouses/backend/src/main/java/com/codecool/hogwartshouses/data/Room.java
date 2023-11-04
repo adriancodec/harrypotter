@@ -15,7 +15,7 @@ public class Room {
     private int cappacity;
     private int occupancy;
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Student> studentList = new ArrayList<>();
 
     public Room() {

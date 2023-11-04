@@ -1,6 +1,7 @@
 package com.codecool.hogwartshouses.services;
 
 import com.codecool.hogwartshouses.data.Recipe;
+import com.codecool.hogwartshouses.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public class RecipeService {
 
     private final RecipeRepository recipeRepository;
 
-    public RecipeService(RecipeRepository recipeRepository) {
+    public RecipeService(final RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
@@ -18,7 +19,7 @@ public class RecipeService {
         return recipeRepository.findAll();
     }
 
-    public Recipe saveRecipe(Recipe recipe) {
+    public Recipe saveRecipe(final Recipe recipe) {
         return recipeRepository.save(recipe);
     }
 }

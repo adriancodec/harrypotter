@@ -27,9 +27,14 @@ public class StudentsController {
         return studentService.saveOneStudent(student);
     }
 
+    @PutMapping("{studentId}")
+    Student editStudent(@PathVariable Long studentId, @RequestParam String pet) throws StudentNotFoundException {
+        return studentService.editOneStudent(studentId, pet);
+    }
+
     @GetMapping("{studentId}")
     Student getStudentById(@PathVariable Long studentId) throws StudentNotFoundException {
-        return studentService.findStudentById(studentId);
+        return studentService.getStudentById(studentId);
     }
 
 }

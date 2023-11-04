@@ -2,11 +2,15 @@ import React from 'react';
 import SaveButton from "../buttons/SaveButton";
 import HelpButton from "../buttons/HelpButton";
 
-function ButtonsHolderComponent() {
+function ButtonsHolderComponent({ onHelpClick }) {
+
+    console.log("rendered buttons holder");
+    console.log(onHelpClick);
+
     return (
         <>
             <SaveButton>Add ingredient</SaveButton>
-            <HelpButton>Show similar recipes</HelpButton>
+            <HelpButton onHelpClick={onHelpClick}>Show similar recipes</HelpButton>
         </>
     );
 }

@@ -18,18 +18,16 @@ public class Recipe {
     @JoinColumn(name = "creator_id")
     private Student student;
 
-    //@ManyToMany()//cascade=CascadeType.ALL
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST/*, cascade = CascadeType.MERGE*/)//because of creating potions in application Runner. Can be reverted to above code in comment
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Ingredient> ingredients = new ArrayList<>();
 
     public Recipe() {
-
     }
 
     public Recipe(final String name, final Student student, final List<Ingredient> ingredients) {
         this.name = name;
         this.student = student;
-        this.ingredients = ingredients;
+        this.ingredients = new ArrayList<>(ingredients);
     }
 
     public Long getId() {

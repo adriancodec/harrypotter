@@ -1,16 +1,14 @@
 package com.codecool.hogwartshouses.controllers;
 
 import com.codecool.hogwartshouses.data.Room;
-import com.codecool.hogwartshouses.data.Student;
 import com.codecool.hogwartshouses.exceptions.roomExceptions.*;
+import com.codecool.hogwartshouses.exceptions.studentExceptions.StudentNotFoundException;
 import com.codecool.hogwartshouses.services.RoomService;
-import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@Transactional
 @RequestMapping("rooms")
 public class RoomsController {
 
@@ -36,8 +34,8 @@ public class RoomsController {
     }
 
     @DeleteMapping("{roomId}")
-    Long deleteRoomById(@PathVariable Long roomId) {
-        return roomService.removeOneRoom(roomId);
+    Long deleteRoomById(@PathVariable Long roomId) throws RoomNotFoundException {
+        return roomService.removeOneRoomById(roomId);
     }
 
     @PutMapping("{roomId}")
@@ -45,9 +43,9 @@ public class RoomsController {
         return roomService.updateRoomById(roomId, room);
     }
 
-    @PutMapping("addStudent/{roomId}")
-    Room addStudentToRoom(@PathVariable Long roomId, @RequestBody Student student) throws RoomNotFoundException, UserAleadyInRoomException, RoomIsFullException {
-        return roomService.addStudentToRoomById(roomId, student);
+    @PutMapping("{roomId}/addStudent")
+    Room addStudentToRoom(@PathVariable Long roomId, @RequestParam Long studentId) throws RoomNotFoundException, UserAleadyInRoomException, RoomIsFullException, StudentNotFoundException, RoomOccupancyFailureException {
+        return roomService.addStudentToRoomById(roomId, studentId);
     }
 
     @GetMapping("available")

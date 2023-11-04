@@ -7,12 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.codecool.hogwartshouses.constants.Constants.BREW_STATUS_DISCOVERY;
-import static com.codecool.hogwartshouses.constants.Constants.BREW_STATUS_REPLICA;
+import static com.codecool.hogwartshouses.constants.Constants.*;
 
 @Entity
 public class Potion {
@@ -26,7 +24,7 @@ public class Potion {
     private Long studentId;
 
     //@ManyToMany()//cascade=CascadeType.ALL
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST/*, cascade = CascadeType.PERSIST*/)//because of creating potions in application Runner. Can be reverted to above code in comment
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<Ingredient> ingredients = new ArrayList<>();
 
     private String brewingStatus;
@@ -98,23 +96,26 @@ public class Potion {
     }
 
     //change potion fields if it is a replica
+    public void handleBrew() {
+        this.setBrewingStatus(BREW_STATUS_BREW);
+    }
+
+    //change potion fields if it is a replica
     public void handleReplica(final Recipe recipe) {
-        System.out.println("POTION IS A REPLICA: ");
         this.setBrewingStatus(BREW_STATUS_REPLICA);
         this.setRecipe(recipe);
     }
 
     //change potion fields if it is a discovery
     public void handleDiscovery(final Recipe recipe) {
-        System.out.println("POTION IS A DISCOVERY: " + this.getBrewingStatus());
         this.setBrewingStatus(BREW_STATUS_DISCOVERY);
         this.setRecipe(recipe);
     }
 
 
     //to get the correct ingredient list (if there is recipe, then we get the recipe ingredients, otherwise the potion ingredients)
-    @JsonIgnore
-    @Transient
+    @JsonIgnore // exclude from json representation from object at serializing
+    @Transient // do not save this to database
     public List<Ingredient> getIngredientsList() {
         return this.getRecipe()!=null ? this.getRecipe().getIngredients() : this.getIngredients();
     }
@@ -139,4 +140,6 @@ public class Potion {
             throw new RecipeShouldBeNullWhenCreatingException();
         }
     }
+
+
 }

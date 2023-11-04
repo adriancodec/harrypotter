@@ -1,12 +1,10 @@
-package com.codecool.hogwartshouses.services;
+package com.codecool.hogwartshouses.repositories;
 
 import com.codecool.hogwartshouses.data.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
+@Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-
-    public Optional<Student> findStudentById(Long studentId);
 
 }

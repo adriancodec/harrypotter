@@ -4,6 +4,8 @@ import com.codecool.hogwartshouses.constants.Constants;
 import com.codecool.hogwartshouses.data.Room;
 import com.codecool.hogwartshouses.data.Student;
 import com.codecool.hogwartshouses.exceptions.roomExceptions.*;
+import com.codecool.hogwartshouses.exceptions.studentExceptions.StudentNotFoundException;
+import com.codecool.hogwartshouses.repositories.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,42 +14,60 @@ import java.util.List;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final StudentService studentService;
 
-    public RoomService(RoomRepository roomRepository, StudentRepository studentRepository) {
+    public RoomService(final RoomRepository roomRepository, final StudentService studentService) {
         this.roomRepository = roomRepository;
+        this.studentService = studentService;
     }
 
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
 
-    public Room saveOneRoom(Room room) {
+    public Room saveOneRoom(final Room room) {
         return roomRepository.save(room);
     }
 
-    public Room getRoomById(Long roomId) throws RoomNotFoundException {
+    public Room getRoomById(final Long roomId) throws RoomNotFoundException {
         return roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
     }
 
-    public Long removeOneRoom(Long roomId) {
-        roomRepository.deleteRoomById(roomId);
+    public Long removeOneRoomById(final Long roomId) throws RoomNotFoundException {
+        Room room = getRoomById(roomId);
+        List<Student> studentList = room.getStudentList();
+        for(Student student : studentList){
+            student.setRoom(null);
+        }
+        roomRepository.deleteById(roomId);
         return roomId;//return the roomId which was deleted
     }
 
-    public Room updateRoomById(Long roomId, Room inputRoom) throws RoomNotFoundException {
-        Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
+    public Room updateRoomById(final Long roomId, final Room inputRoom) throws RoomNotFoundException {
+        Room room = getRoomById(roomId);
         room.setCappacity(inputRoom.getCappacity());
         return roomRepository.save(room);
     }
 
-    public Room addStudentToRoomById(Long roomId, Student student) throws RoomNotFoundException, UserAleadyInRoomException, RoomIsFullException {
-        Room room = roomRepository.findById(roomId).orElseThrow(RoomNotFoundException::new);
+    public Room addStudentToRoomById(final Long roomId, final Long studentId) throws RoomNotFoundException, UserAleadyInRoomException, RoomIsFullException, StudentNotFoundException, RoomOccupancyFailureException {
+        Student student = studentService.getStudentById(studentId);
+        Room room = getRoomById(roomId);
         if(room.getStudentList().contains(student)){
             throw new UserAleadyInRoomException();
         } else if(room.getCappacity() <= room.getStudentList().size()) {
             throw new RoomIsFullException();
         } else {
+            Room oldRoom = student.getRoom();
+            if(oldRoom!=null){
+                if(oldRoom.getOccupancy()<=0){
+                    throw new RoomOccupancyFailureException();
+                }
+                oldRoom.setOccupancy(room.getOccupancy()-1);
+                //User is auto removed after assigning to new Room
+            }
             room.getStudentList().add(student);
+            room.setOccupancy(room.getOccupancy()+1);
+            student.setRoom(room);
         }
         return roomRepository.save(room);
     }

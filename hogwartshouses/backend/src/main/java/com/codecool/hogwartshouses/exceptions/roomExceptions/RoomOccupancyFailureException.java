@@ -1,4 +1,4 @@
 package com.codecool.hogwartshouses.exceptions.roomExceptions;
 
-public class UserAleadyInRoomException extends Exception {
+public class RoomOccupancyFailureException extends Exception{
 }

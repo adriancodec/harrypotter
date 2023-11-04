@@ -1,9 +1,9 @@
 import React from 'react';
 
-function SaveButton() {
+function SaveButton({onClickHandler}) {
     return (
         <>
-
+            <button onClick={onClickHandler}>Save</button>
         </>
     );
 }

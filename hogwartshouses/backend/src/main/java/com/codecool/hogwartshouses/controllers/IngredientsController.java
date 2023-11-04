@@ -22,6 +22,6 @@ public class IngredientsController {
 
     @PostMapping
     Ingredient saveIngredient(@RequestBody Ingredient ingredient) {
-        return ingredientService.saveIngredient(ingredient);
+        return ingredientService.getOrCreateOneIngredient(ingredient);
     }
 }

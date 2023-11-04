@@ -13,5 +13,8 @@ public class Constants {
     public static final String BREW_STATUS_REPLICA = "replica";
     public static final String BREW_STATUS_DISCOVERY = "discovery";
 
+    //Other String
     public static final int MAX_INGREDIENTS = 5;
+
+    public static final String POTION_DISCOVERY_TEXT = "%s's discovery #%s";
 }
