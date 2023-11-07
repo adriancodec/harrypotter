@@ -13,6 +13,8 @@ public class Student {
     private String name;
     private String pet;
 
+    private Long roomIdentification;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     @JsonIgnore
@@ -56,5 +58,13 @@ public class Student {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public Long getRoomIdentification() {
+        return roomIdentification;
+    }
+
+    public void setRoomIdentification(Long roomIdentification) {
+        this.roomIdentification = roomIdentification;
     }
 }

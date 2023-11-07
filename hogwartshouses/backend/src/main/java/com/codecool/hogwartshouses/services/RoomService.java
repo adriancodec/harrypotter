@@ -62,12 +62,13 @@ public class RoomService {
                 if(oldRoom.getOccupancy()<=0){
                     throw new RoomOccupancyFailureException();
                 }
-                oldRoom.setOccupancy(room.getOccupancy()-1);
+                oldRoom.setOccupancy(oldRoom.getOccupancy()-1);
                 //User is auto removed after assigning to new Room
             }
             room.getStudentList().add(student);
             room.setOccupancy(room.getOccupancy()+1);
             student.setRoom(room);
+            student.setRoomIdentification(room.getId());
         }
         return roomRepository.save(room);
     }
