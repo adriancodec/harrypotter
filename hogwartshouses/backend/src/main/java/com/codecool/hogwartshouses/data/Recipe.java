@@ -6,28 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Recipe {
+public class Recipe extends Brewable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private Student student;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private List<Ingredient> ingredients = new ArrayList<>();
-
-    public Recipe() {
+    public Recipe(final String name, final Student student, final List<Ingredient> ingredients){
+        super(name, student, new ArrayList<>(ingredients));
     }
 
-    public Recipe(final String name, final Student student, final List<Ingredient> ingredients) {
-        this.name = name;
-        this.student = student;
-        this.ingredients = new ArrayList<>(ingredients);
+    public Recipe() {
+
     }
 
     public Long getId() {
@@ -36,29 +26,5 @@ public class Recipe {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
     }
 }
