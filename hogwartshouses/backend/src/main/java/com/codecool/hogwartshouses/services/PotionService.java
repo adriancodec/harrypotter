@@ -52,7 +52,7 @@ public class PotionService {
 
         potion.setIngredients(getOrCreateIngredientsByName(potion.getIngredients()));
 
-        if(potion.getIngredientsList().size()<MAX_INGREDIENTS){
+        if(potion.getIngredients().size()<MAX_INGREDIENTS){
             potion.handleBrew();
         } else {
             checkIfReplicaOrDiscovery(potion);
@@ -63,11 +63,11 @@ public class PotionService {
 
     public Potion addIngredientToPotion(final Long potionId, final Ingredient newIngredient ) throws PotionNotFoundException, UserNotAttachedToPotionException, MaxIngredientReachedException, StudentNotFoundException {
         Potion potion = getPotionById(potionId);
-        if(potion.getIngredientsList().size()>=MAX_INGREDIENTS){
+        if(potion.getIngredients().size()>=MAX_INGREDIENTS){
             throw new MaxIngredientReachedException();
         }
         potion.addIngredient(ingredientService.getOrCreateOneIngredient(newIngredient));
-        if(potion.getIngredientsList().size()==MAX_INGREDIENTS){
+        if(potion.getIngredients().size()==MAX_INGREDIENTS){
             checkIfReplicaOrDiscovery(potion);
         }
         return potionRepository.save(potion);
@@ -75,7 +75,7 @@ public class PotionService {
 
     private void checkIfReplicaOrDiscovery(final Potion potion) throws StudentNotFoundException {
         List<Recipe> allRecipes = recipeService.getAllRecipes();
-        Optional<Recipe> replicaRecipeFound = getRecipeIfExistWithSameIngredients(allRecipes, potion.getIngredientsList());
+        Optional<Recipe> replicaRecipeFound = getRecipeIfExistWithSameIngredients(allRecipes, potion.getIngredients());
         if(replicaRecipeFound.isPresent()){
             potion.handleReplica(replicaRecipeFound.get());
         } else {
@@ -94,9 +94,9 @@ public class PotionService {
 
     //create a Recipe
     public Recipe createRecipe(final Potion potion, final List<Recipe> recipesList) throws StudentNotFoundException {
-        Student student = studentService.getStudentById(potion.getStudentId());
-        String studentName = student.getName();
-        int countOfDiscoveriesFromStudent = recipesList.stream().filter((recipe) -> (recipe.getStudent().getId().equals(potion.getStudentId()))).toList().size();
+        final Student student = potion.getStudent();
+        final String studentName = student.getName();
+        int countOfDiscoveriesFromStudent = recipesList.stream().filter((recipe) -> (recipe.getStudent().getId().equals(student.getId()))).toList().size();
         int newRecipeNumber = countOfDiscoveriesFromStudent + 1;
         String recipeName = String.format(POTION_DISCOVERY_TEXT, studentName, newRecipeNumber);
         Recipe recipe = new Recipe(recipeName, student, potion.getIngredients());

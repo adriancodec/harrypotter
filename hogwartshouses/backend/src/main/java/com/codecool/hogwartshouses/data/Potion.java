@@ -6,26 +6,16 @@ import com.codecool.hogwartshouses.exceptions.potionExceptions.UserNotAttachedTo
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.codecool.hogwartshouses.constants.Constants.*;
 
 @Entity
-public class Potion {
+public class Potion extends Brewable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-
-    private Long studentId;
-
-    //@ManyToMany()//cascade=CascadeType.ALL
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private List<Ingredient> ingredients = new ArrayList<>();
 
     private String brewingStatus;
 
@@ -33,13 +23,10 @@ public class Potion {
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    public Potion() {
+    public Potion(String name, Student student, List<Ingredient> ingredients) {
+        super(name, student, ingredients);
     }
-
-    public Potion(String name, Long studentId, List<Ingredient> ingredients) {
-        this.name = name;
-        this.studentId = studentId;
-        this.ingredients = ingredients;
+    public Potion() {
     }
 
     public Long getId() {
@@ -48,30 +35,6 @@ public class Potion {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
-    }
-
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
     }
 
     public String getBrewingStatus() {
@@ -92,7 +55,7 @@ public class Potion {
 
     //add ingredients to potion field
     public void addIngredient(Ingredient ingredient) {
-        this.ingredients.add(ingredient);
+        this.getIngredients().add(ingredient);
     }
 
     //change potion fields if it is a replica
@@ -112,17 +75,9 @@ public class Potion {
         this.setRecipe(recipe);
     }
 
-
-    //to get the correct ingredient list (if there is recipe, then we get the recipe ingredients, otherwise the potion ingredients)
-    @JsonIgnore // exclude from json representation from object at serializing
-    @Transient // do not save this to database
-    public List<Ingredient> getIngredientsList() {
-        return this.getRecipe()!=null ? this.getRecipe().getIngredients() : this.getIngredients();
-    }
-
     //validate if there is a user id associated with the potion
     public void validateUser() throws UserNotAttachedToPotionException {
-        if(this.getStudentId()==null) {
+        if(this.getStudent()==null) {
             throw new UserNotAttachedToPotionException();
         }
     }

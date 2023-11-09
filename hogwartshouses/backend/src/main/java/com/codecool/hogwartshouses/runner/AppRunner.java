@@ -53,10 +53,10 @@ public class AppRunner implements ApplicationRunner {
         Student student2 = new Student("Ron Weasley", Constants.ANIMAL_RAT);
         Student student3 = new Student("Harry Potter", Constants.ANIMAL_OWL);
         Student student4 =new Student("Drako Malfoy", Constants.ANIMAL_DOG);
-        studentRepository.save(student1);
-        studentRepository.save(student2);
-        studentRepository.save(student3);
-        studentRepository.save(student4);
+        Student hermione = studentRepository.save(student1);
+        Student ron = studentRepository.save(student2);
+        Student harry = studentRepository.save(student3);
+        Student drako = studentRepository.save(student4);
 
         //add Students to Rooms
         roomService.addStudentToRoomById(3L, student1.getId());
@@ -70,9 +70,9 @@ public class AppRunner implements ApplicationRunner {
         listOfIngredients.add(ingredientRepository.save(new Ingredient("Milk")));
         listOfIngredients.add(ingredientRepository.save(new Ingredient("Cucumber")));
         listOfIngredients.add(ingredientRepository.save(new Ingredient("Water")));
-        potionService.validateAndSavePotion(new Potion("Potion 1", 3L, listOfIngredients));
+        potionService.validateAndSavePotion(new Potion("Potion 1", harry, listOfIngredients));
         listOfIngredients.add(ingredientRepository.save(new Ingredient("Frogskin")));
-        potionService.validateAndSavePotion(new Potion("Potion 2", 3L, listOfIngredients));
+        potionService.validateAndSavePotion(new Potion("Potion 2", harry, listOfIngredients));
 
     }
 }
